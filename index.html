@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>還元コイン計算機</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .header-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #27CAB1;
+    color: white;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 10;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    padding: 15px 25px 25px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-top: 70px;
+  }
+
+  .coin-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 35px;
+  }
+  .coin-icon {
+    width: 35px;
+    height: 35px;
+    background: gold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: orange;
+    text-shadow: 0 0 0 orange;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .coin-label {
+    font-weight: bold;
+    margin-right: 8px;
+    min-width: 70px;
+    font-size: 13px;
+  }
+  input[type="number"] {
+    flex: 1;
+    padding: 6px;
+    font-size: 13px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  .result {
+    margin-top: 25px;
+    text-align: center;
+    padding: 18px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .result-label {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  #resultValue {
+    font-size: 26px;
+    font-weight: bold;
+    color: yellow;
+    text-shadow:
+      -1px -1px 0 orange, 1px -1px 0 orange,
+      -1px 1px 0 orange, 1px 1px 0 orange;
+  }
+
+  /* 下部リンク用 */
+  .creator-link {
+    margin-top: 400px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .creator-link a {
+    color: #27CAB1;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="header-bar">還元コイン計算機</div>
+
+<div class="container">
+  <div class="coin-row">
+    <div class="coin-icon">M</div>
+    <div class="coin-label">無償コイン</div>
+    <input type="number" id="freeCoin" placeholder="数字を入力" oninput="calculate()">
+  </div>
+
+  <div class="coin-row">
+    <div class="coin-icon">M</div>
+    <div class="coin-label">有償コイン</div>
+    <input type="number" id="paidCoin" placeholder="数字を入力" oninput="calculate()">
+  </div>
+
+  <div class="result">
+    <div class="result-label">【還元コイン】</div>
+    <div id="resultValue">0コイン</div>
+  </div>
+
+  <div class="creator-link">
+    <a href="https://x.com/PNG_Mirrativ" target="_blank">【作った人】</a>
+  </div>
+</div>
+
+<script>
+function calculate() {
+  const free = parseFloat(document.getElementById('freeCoin').value) || 0;
+  const paid = parseFloat(document.getElementById('paidCoin').value) || 0;
+
+  const freeResult = free * 0.3; // 無償コインは30%残る
+  const paidResult = paid * 0.9; // 有償コインは90%残る
+
+  const total = Math.floor(freeResult + paidResult);
+
+  document.getElementById('resultValue').textContent = total + "コイン";
+}
+</script>
+
+</body>
+</html>
