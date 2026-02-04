@@ -3,149 +3,315 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>還元コイン計算機</title>
+<title>計算機</title>
+
 <style>
-  body {
-    font-family: sans-serif;
-    background: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-  }
+body{
+font-family:sans-serif;
+background:#f0f0f0;
+margin:0;
+display:flex;
+justify-content:center;
+}
 
-  .header-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #27CAB1;
-    color: white;
-    text-align: center;
-    padding: 12px 0;
-    font-size: 18px;
-    font-weight: bold;
-    z-index: 10;
-  }
+.header-bar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:#27CAB1;
+color:white;
+text-align:center;
+padding:12px 0;
+font-weight:bold;
+z-index:10;
+}
 
-  .container {
-    width: 100%;
-    max-width: 400px;
-    background: #ffffff;
-    padding: 15px 25px 25px 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin-top: 70px;
-  }
+.menu-button{
+position:absolute;
+left:15px;
+top:50%;
+transform:translateY(-50%);
+font-size:26px;
+cursor:pointer;
+}
 
-  .coin-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 35px;
-  }
-  .coin-icon {
-    width: 35px;
-    height: 35px;
-    background: gold;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    color: orange;
-    text-shadow: 0 0 0 orange;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-  .coin-label {
-    font-weight: bold;
-    margin-right: 8px;
-    min-width: 70px;
-    font-size: 13px;
-  }
-  input[type="number"] {
-    flex: 1;
-    padding: 6px;
-    font-size: 13px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
+.overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.2);
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+z-index:19;
+}
+.overlay.active{
+opacity:1;
+pointer-events:auto;
+}
 
-  .result {
-    margin-top: 25px;
-    text-align: center;
-    padding: 18px;
-    border: 1px solid black;
-    border-radius: 10px;
-    background: #fff;
-  }
-  .result-label {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
-  #resultValue {
-    font-size: 26px;
-    font-weight: bold;
-    color: yellow;
-    text-shadow:
-      -1px -1px 0 orange, 1px -1px 0 orange,
-      -1px 1px 0 orange, 1px 1px 0 orange;
-  }
+.side-menu{
+position:fixed;
+top:0;
+left:0;
+width:50%;
+max-width:260px;
+height:100%;
+background:white;
+transform:translateX(-100%);
+transition:0.3s;
+z-index:20;
+padding:20px;
+box-shadow:4px 0 12px rgba(0,0,0,0.2);
+}
+.side-menu.active{
+transform:translateX(0);
+}
+.side-menu div{
+margin-top:20px;
+font-weight:bold;
+color:#27CAB1;
+cursor:pointer;
+}
 
-  /* 下部リンク用 */
-  .creator-link {
-    margin-top: 400px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 16px;
-  }
-  .creator-link a {
-    color: #27CAB1;
-    text-decoration: none;
-  }
+.container{
+width:100%;
+max-width:400px;
+background:white;
+padding:15px 25px 25px;
+border-radius:15px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+margin-top:70px;
+}
+
+.page{display:none;}
+.page.active{display:block;}
+
+.coin-row{
+display:flex;
+align-items:center;
+margin-bottom:35px;
+}
+
+.coin-icon{
+width:35px;
+height:35px;
+background:gold;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+color:orange;
+margin-right:12px;
+}
+
+.star-icon{
+width:35px;
+height:35px;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-right:12px;
+font-size:20px;
+background:linear-gradient(45deg,#cfa8ff,#74d8ff);
+color:white;
+border-radius:8px;
+text-shadow:0 0 3px #6a2ea0;
+}
+
+.coin-label{
+font-weight:bold;
+margin-right:8px;
+min-width:90px;
+font-size:13px;
+}
+
+input{
+flex:1;
+padding:6px;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+.result{
+margin-top:25px;
+text-align:center;
+padding:18px;
+border:1px solid black;
+border-radius:10px;
+}
+
+.result-label{
+font-size:22px;
+font-weight:bold;
+margin-bottom:12px;
+}
+
+.resultValue{
+font-size:26px;
+font-weight:bold;
+color:yellow;
+text-shadow:
+-1px -1px 0 orange,1px -1px 0 orange,
+-1px 1px 0 orange,1px 1px 0 orange;
+}
+
+.result-row{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+margin-top:10px;
+font-weight:bold;
+}
+
+.reset-btn{
+margin-top:20px;
+width:100%;
+padding:10px;
+font-size:15px;
+font-weight:bold;
+border:none;
+border-radius:8px;
+background:#27CAB1;
+color:white;
+cursor:pointer;
+}
 </style>
 </head>
+
 <body>
 
-<div class="header-bar">還元コイン計算機</div>
+<div class="header-bar">
+<div class="menu-button" onclick="openMenu()">≡</div>
+<span id="titleText">還元コイン計算機</span>
+</div>
+
+<div class="overlay" onclick="closeMenu()"></div>
+
+<div class="side-menu">
+<div onclick="showPage('coin')">還元コイン計算</div>
+<div onclick="showPage('stars')">スターズポイント計算</div>
+</div>
 
 <div class="container">
-  <div class="coin-row">
-    <div class="coin-icon">M</div>
-    <div class="coin-label">無償コイン</div>
-    <input type="number" id="freeCoin" placeholder="数字を入力" oninput="calculate()">
-  </div>
 
-  <div class="coin-row">
-    <div class="coin-icon">M</div>
-    <div class="coin-label">有償コイン</div>
-    <input type="number" id="paidCoin" placeholder="数字を入力" oninput="calculate()">
-  </div>
+<!-- ===== 還元 ===== -->
+<div id="coinPage" class="page active">
 
-  <div class="result">
-    <div class="result-label">【還元コイン】</div>
-    <div id="resultValue">0コイン</div>
-  </div>
+<div class="coin-row">
+<div class="coin-icon">M</div>
+<div class="coin-label">無償コイン</div>
+<input type="number" id="freeCoin" max="100000000" oninput="limit(this);calculateCoin()">
+</div>
 
-  <div class="creator-link">
-    <a href="https://x.com/PNG_Mirrativ" target="_blank">【作った人】</a>
-  </div>
+<div class="coin-row">
+<div class="coin-icon">M</div>
+<div class="coin-label">有償コイン</div>
+<input type="number" id="paidCoin" max="100000000" oninput="limit(this);calculateCoin()">
+</div>
+
+<div class="result">
+<div class="result-label">【還元コイン】</div>
+<div id="coinResult" class="resultValue">0コイン</div>
+</div>
+
+<button class="reset-btn" onclick="resetCoin()">リセット</button>
+</div>
+
+<!-- ===== スターズ ===== -->
+<div id="starsPage" class="page">
+
+<div class="coin-row">
+<div class="star-icon">★</div>
+<div class="coin-label">現在のポイント</div>
+<input type="number" id="currentStar" max="100000000" oninput="limit(this);calculateStars()">
+</div>
+
+<div class="coin-row">
+<div class="star-icon">★</div>
+<div class="coin-label">目標のポイント</div>
+<input type="number" id="targetStar" max="100000000" oninput="limit(this);calculateStars()">
+</div>
+
+<div class="result">
+<div class="result-label">【必要コイン数】</div>
+
+<div class="result-row">
+<div class="coin-icon">M</div>
+<div>無償</div>
+<div id="freeNeed" class="resultValue">0コイン</div>
+</div>
+
+<div class="result-row">
+<div class="coin-icon">M</div>
+<div>有償</div>
+<div id="paidNeed" class="resultValue">0コイン</div>
+</div>
+</div>
+
+<button class="reset-btn" onclick="resetStars()">リセット</button>
+</div>
+
 </div>
 
 <script>
-function calculate() {
-  const free = parseFloat(document.getElementById('freeCoin').value) || 0;
-  const paid = parseFloat(document.getElementById('paidCoin').value) || 0;
+const MAX = 100000000;
 
-  const freeResult = free * 0.3; // 無償コインは30%残る
-  const paidResult = paid * 0.9; // 有償コインは90%残る
+function limit(el){
+if(el.value > MAX) el.value = MAX;
+if(el.value < 0) el.value = 0;
+}
 
-  const total = Math.floor(freeResult + paidResult);
+function openMenu(){
+document.querySelector('.side-menu').classList.add('active');
+document.querySelector('.overlay').classList.add('active');
+}
+function closeMenu(){
+document.querySelector('.side-menu').classList.remove('active');
+document.querySelector('.overlay').classList.remove('active');
+}
 
-  document.getElementById('resultValue').textContent = total + "コイン";
+function showPage(type){
+resetCoin();
+resetStars();
+coinPage.classList.remove("active");
+starsPage.classList.remove("active");
+if(type==="coin"){
+coinPage.classList.add("active");
+titleText.textContent="還元コイン計算機";
+}else{
+starsPage.classList.add("active");
+titleText.textContent="スターズポイント計算";
+}
+closeMenu();
+}
+
+function calculateCoin(){
+const free = Number(freeCoin.value)||0;
+const paid = Number(paidCoin.value)||0;
+coinResult.textContent = Math.floor(free*0.3 + paid*0.9) + "コイン";
+}
+
+function resetCoin(){
+freeCoin.value="";
+paidCoin.value="";
+coinResult.textContent="0コイン";
+}
+
+function calculateStars(){
+let diff = (Number(targetStar.value)||0) - (Number(currentStar.value)||0);
+if(diff < 0) diff = 0;
+freeNeed.textContent = Math.floor(diff * 3.333333333333) + "コイン";
+paidNeed.textContent = Math.floor(diff) + "コイン";
+}
+
+function resetStars(){
+currentStar.value="";
+targetStar.value="";
+freeNeed.textContent="0コイン";
+paidNeed.textContent="0コイン";
 }
 </script>
 
