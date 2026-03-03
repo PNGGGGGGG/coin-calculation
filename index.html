@@ -1,319 +1,401 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>計算機</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計算機 | </title>
+    <style>
+        :root {
+            --primary-color: #27CAB1;
+            --primary-dark: #1ea894;
+            --accent-gold: #FFD700;
+            --accent-orange: #FF8C00;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
 
-<style>
-body{
-font-family:sans-serif;
-background:#f0f0f0;
-margin:0;
-display:flex;
-justify-content:center;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.header-bar{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-background:#27CAB1;
-color:white;
-text-align:center;
-padding:12px 0;
-font-weight:bold;
-z-index:10;
-}
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-.menu-button{
-position:absolute;
-left:15px;
-top:50%;
-transform:translateY(-50%);
-font-size:26px;
-cursor:pointer;
-}
+        /* --- Header --- */
+        header {
+            width: 100%;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-.overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.2);
-opacity:0;
-pointer-events:none;
-transition:0.3s;
-z-index:19;
-}
-.overlay.active{
-opacity:1;
-pointer-events:auto;
-}
+        .menu-trigger {
+            position: absolute;
+            left: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
 
-.side-menu{
-position:fixed;
-top:0;
-left:0;
-width:50%;
-max-width:260px;
-height:100%;
-background:white;
-transform:translateX(-100%);
-transition:0.3s;
-z-index:20;
-padding:20px;
-box-shadow:4px 0 12px rgba(0,0,0,0.2);
-}
-.side-menu.active{
-transform:translateX(0);
-}
-.side-menu div{
-margin-top:20px;
-font-weight:bold;
-color:#27CAB1;
-cursor:pointer;
-}
+        h1 {
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+        }
 
-.container{
-width:100%;
-max-width:400px;
-background:white;
-padding:15px 25px 25px;
-border-radius:15px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-margin-top:70px;
-}
+        /* --- Navigation (Side Menu) --- */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 150;
+        }
 
-.page{display:none;}
-.page.active{display:block;}
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.coin-row{
-display:flex;
-align-items:center;
-margin-bottom:35px;
-}
+        nav.side-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100%;
+            background: var(--card-bg);
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 200;
+            padding: 80px 20px 20px;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+        }
 
-.coin-icon{
-width:35px;
-height:35px;
-background:gold;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-color:orange;
-margin-right:12px;
-}
+        nav.side-menu.active {
+            transform: translateX(0);
+        }
 
-.star-icon{
-width:35px;
-height:35px;
-display:flex;
-align-items:center;
-justify-content:center;
-margin-right:12px;
-font-size:20px;
-background:linear-gradient(45deg,#cfa8ff,#74d8ff);
-color:white;
-border-radius:8px;
-text-shadow:0 0 3px #6a2ea0;
-}
+        .menu-item {
+            display: block;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            cursor: pointer;
+        }
 
-.coin-label{
-font-weight:bold;
-margin-right:8px;
-min-width:90px;
-font-size:13px;
-}
+        .menu-item:hover {
+            background-color: rgba(39, 202, 177, 0.1);
+            color: var(--primary-color);
+        }
 
-input{
-flex:1;
-padding:6px;
-border-radius:5px;
-border:1px solid #ccc;
-}
+        /* --- Main Content --- */
+        main {
+            width: 100%;
+            max-width: 480px;
+            margin-top: 80px;
+            padding: 20px;
+        }
 
-.result{
-margin-top:25px;
-text-align:center;
-padding:18px;
-border:1px solid black;
-border-radius:10px;
-}
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px 24px;
+            box-shadow: var(--shadow);
+        }
 
-.result-label{
-font-size:22px;
-font-weight:bold;
-margin-bottom:12px;
-}
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
 
-.resultValue{
-font-size:26px;
-font-weight:bold;
-color:yellow;
-text-shadow:
--1px -1px 0 orange,1px -1px 0 orange,
--1px 1px 0 orange,1px 1px 0 orange;
-}
+        .page.active {
+            display: block;
+        }
 
-.result-row{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-margin-top:10px;
-font-weight:bold;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.reset-btn{
-margin-top:20px;
-width:100%;
-padding:10px;
-font-size:15px;
-font-weight:bold;
-border:none;
-border-radius:8px;
-background:#27CAB1;
-color:white;
-cursor:pointer;
-}
-</style>
+        /* --- Input Rows --- */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            transition: var(--transition);
+        }
+
+        .input-row:focus-within {
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(39, 202, 177, 0.1);
+        }
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+
+        .icon-coin { background: var(--accent-gold); color: var(--accent-orange); }
+        .icon-star { background: linear-gradient(135deg, #cfa8ff, #74d8ff); color: white; }
+
+        .label-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            width: 100px;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: 600;
+            outline: none;
+            width: 100%;
+            text-align: right;
+        }
+
+        /* --- Result Section --- */
+        .result-container {
+            margin-top: 30px;
+            padding: 25px;
+            background: #1a1a1a;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .result-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .result-sub-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .result-sub-label { font-size: 0.9rem; color: #ccc; }
+        .result-sub-value { font-weight: bold; color: var(--accent-gold); }
+
+        /* --- Buttons --- */
+        .btn-reset {
+            margin-top: 25px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-reset:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-reset:active {
+            transform: translateY(0);
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="header-bar">
-<div class="menu-button" onclick="openMenu()">≡</div>
-<span id="titleText">還元コイン計算機</span>
-</div>
+    <header>
+        <button class="menu-trigger" onclick="toggleMenu()" aria-label="Menu">≡</button>
+        <h1 id="headerTitle">還元コイン計算機</h1>
+    </header>
 
-<div class="overlay" onclick="closeMenu()"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<div class="side-menu">
-<div onclick="showPage('coin')">還元コイン計算</div>
-<div onclick="showPage('stars')">スターズポイント計算</div>
-</div>
+    <nav class="side-menu" id="sideMenu">
+        <a class="menu-item" onclick="switchPage('coin')">還元コイン計算</a>
+        <a class="menu-item" onclick="switchPage('stars')">スターズポイント計算</a>
+    </nav>
 
-<div class="container">
+    <main>
+        <article class="card">
+            <section id="coinPage" class="page active">
+                <div class="input-group">
+                    <div class="input-row">
+                        <div class="icon-circle icon-coin">M</div>
+                        <span class="label-text">無償コイン</span>
+                        <input type="number" id="freeCoin" placeholder="0" oninput="handleInput(this); calcCoin()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <div class="icon-circle icon-coin">M</div>
+                        <span class="label-text">有償コイン</span>
+                        <input type="number" id="paidCoin" placeholder="0" oninput="handleInput(this); calcCoin()">
+                    </div>
+                </div>
 
-<!-- ===== 還元 ===== -->
-<div id="coinPage" class="page active">
+                <div class="result-container">
+                    <p class="result-title">推定還元コイン</p>
+                    <div id="coinResult" class="result-display">0</div>
+                </div>
+                <button class="btn-reset" onclick="resetPage('coin')">CLEAR</button>
+            </section>
 
-<div class="coin-row">
-<div class="coin-icon">M</div>
-<div class="coin-label">無償コイン</div>
-<input type="number" id="freeCoin" max="100000000" oninput="limit(this);calculateCoin()">
-</div>
+            <section id="starsPage" class="page">
+                <div class="input-group">
+                    <div class="input-row">
+                        <div class="icon-circle icon-star">★</div>
+                        <span class="label-text">現在ポイント</span>
+                        <input type="number" id="currentStar" placeholder="0" oninput="handleInput(this); calcStars()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <div class="icon-circle icon-star">★</div>
+                        <span class="label-text">目標ポイント</span>
+                        <input type="number" id="targetStar" placeholder="0" oninput="handleInput(this); calcStars()">
+                    </div>
+                </div>
 
-<div class="coin-row">
-<div class="coin-icon">M</div>
-<div class="coin-label">有償コイン</div>
-<input type="number" id="paidCoin" max="100000000" oninput="limit(this);calculateCoin()">
-</div>
+                <div class="result-container">
+                    <p class="result-title">必要コイン数の目安</p>
+                    <div class="result-sub-row">
+                        <span class="result-sub-label">無償コイン時:</span>
+                        <span id="freeNeed" class="result-sub-value">0</span>
+                    </div>
+                    <div class="result-sub-row">
+                        <span class="result-sub-label">有償コイン時:</span>
+                        <span id="paidNeed" class="result-sub-value">0</span>
+                    </div>
+                </div>
+                <button class="btn-reset" onclick="resetPage('stars')">CLEAR</button>
+            </section>
+        </article>
+    </main>
 
-<div class="result">
-<div class="result-label">【還元コイン】</div>
-<div id="coinResult" class="resultValue">0コイン</div>
-</div>
+    <script>
+        const MAX_VAL = 100000000;
+        const dom = {
+            sideMenu: document.getElementById('sideMenu'),
+            overlay: document.getElementById('overlay'),
+            headerTitle: document.getElementById('headerTitle'),
+            pages: {
+                coin: document.getElementById('coinPage'),
+                stars: document.getElementById('starsPage')
+            }
+        };
 
-<button class="reset-btn" onclick="resetCoin()">リセット</button>
-</div>
+        function toggleMenu() {
+            dom.sideMenu.classList.toggle('active');
+            dom.overlay.classList.toggle('active');
+        }
 
-<!-- ===== スターズ ===== -->
-<div id="starsPage" class="page">
+        function switchPage(pageKey) {
+            Object.keys(dom.pages).forEach(key => {
+                dom.pages[key].classList.remove('active');
+            });
+            dom.pages[pageKey].classList.add('active');
+            dom.headerTitle.textContent = pageKey === 'coin' ? '還元コイン計算機' : 'スターズポイント計算';
+            toggleMenu();
+        }
 
-<div class="coin-row">
-<div class="star-icon">★</div>
-<div class="coin-label">現在のポイント</div>
-<input type="number" id="currentStar" max="100000000" oninput="limit(this);calculateStars()">
-</div>
+        function handleInput(el) {
+            if (el.value > MAX_VAL) el.value = MAX_VAL;
+            if (el.value < 0) el.value = 0;
+        }
 
-<div class="coin-row">
-<div class="star-icon">★</div>
-<div class="coin-label">目標のポイント</div>
-<input type="number" id="targetStar" max="100000000" oninput="limit(this);calculateStars()">
-</div>
+        function formatNum(num) {
+            return new Intl.NumberFormat('ja-JP').format(num);
+        }
 
-<div class="result">
-<div class="result-label">【必要コイン数】</div>
+        function calcCoin() {
+            const free = Number(document.getElementById('freeCoin').value) || 0;
+            const paid = Number(document.getElementById('paidCoin').value) || 0;
+            const res = Math.floor(free * 0.3 + paid * 0.9);
+            document.getElementById('coinResult').textContent = formatNum(res);
+        }
 
-<div class="result-row">
-<div class="coin-icon">M</div>
-<div>無償</div>
-<div id="freeNeed" class="resultValue">0コイン</div>
-</div>
+        function calcStars() {
+            const current = Number(document.getElementById('currentStar').value) || 0;
+            const target = Number(document.getElementById('targetStar').value) || 0;
+            let diff = Math.max(0, target - current);
+            
+            document.getElementById('freeNeed').textContent = formatNum(Math.floor(diff * 3.333333333333));
+            document.getElementById('paidNeed').textContent = formatNum(Math.floor(diff));
+        }
 
-<div class="result-row">
-<div class="coin-icon">M</div>
-<div>有償</div>
-<div id="paidNeed" class="resultValue">0コイン</div>
-</div>
-</div>
-
-<button class="reset-btn" onclick="resetStars()">リセット</button>
-</div>
-
-</div>
-
-<script>
-const MAX = 100000000;
-
-function limit(el){
-if(el.value > MAX) el.value = MAX;
-if(el.value < 0) el.value = 0;
-}
-
-function openMenu(){
-document.querySelector('.side-menu').classList.add('active');
-document.querySelector('.overlay').classList.add('active');
-}
-function closeMenu(){
-document.querySelector('.side-menu').classList.remove('active');
-document.querySelector('.overlay').classList.remove('active');
-}
-
-function showPage(type){
-resetCoin();
-resetStars();
-coinPage.classList.remove("active");
-starsPage.classList.remove("active");
-if(type==="coin"){
-coinPage.classList.add("active");
-titleText.textContent="還元コイン計算機";
-}else{
-starsPage.classList.add("active");
-titleText.textContent="スターズポイント計算";
-}
-closeMenu();
-}
-
-function calculateCoin(){
-const free = Number(freeCoin.value)||0;
-const paid = Number(paidCoin.value)||0;
-coinResult.textContent = Math.floor(free*0.3 + paid*0.9) + "コイン";
-}
-
-function resetCoin(){
-freeCoin.value="";
-paidCoin.value="";
-coinResult.textContent="0コイン";
-}
-
-function calculateStars(){
-let diff = (Number(targetStar.value)||0) - (Number(currentStar.value)||0);
-if(diff < 0) diff = 0;
-freeNeed.textContent = Math.floor(diff * 3.333333333333) + "コイン";
-paidNeed.textContent = Math.floor(diff) + "コイン";
-}
-
-function resetStars(){
-currentStar.value="";
-targetStar.value="";
-freeNeed.textContent="0コイン";
-paidNeed.textContent="0コイン";
-}
-</script>
-
+        function resetPage(pageKey) {
+            if (pageKey === 'coin') {
+                document.getElementById('freeCoin').value = '';
+                document.getElementById('paidCoin').value = '';
+                calcCoin();
+            } else {
+                document.getElementById('currentStar').value = '';
+                document.getElementById('targetStar').value = '';
+                calcStars();
+            }
+        }
+    </script>
 </body>
 </html>
